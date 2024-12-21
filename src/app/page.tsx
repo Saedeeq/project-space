@@ -1,10 +1,18 @@
 import Image from "next/image";
-import JBLADU from "@/public/images/jbladu.jpeg";
+import Bg from "@/public/bg.jpg";
+import Login from "@/components/Login";
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center  ">
-      <Image src={JBLADU} alt="JbandLadu" />
+    <div
+      className="  w-screen h-screen overflow-hidden  "
+      style={{
+        backgroundImage: `url(${Bg.src})`,
+        backgroundSize: "contain",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}>
+      <Login />
     </div>
   );
 }
