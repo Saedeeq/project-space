@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Bg from "@/public/bg.jpg";
 import Login from "@/components/Login";
 
