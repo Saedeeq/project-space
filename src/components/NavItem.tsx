@@ -3,7 +3,7 @@ import React from "react";
 
 const NavItem = () => {
   return (
-    <div className="flex space-x-4  ">
+    <div className="space-x-4 hidden md:flex ">
       {navData?.map((item) => (
         <a
           key={item.id}
