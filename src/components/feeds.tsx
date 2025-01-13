@@ -172,7 +172,7 @@ interface FeedsProps {
 }
 const Feeds: React.FC<FeedsProps> = ({ projects, students }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-8 max-h-full overflow-auto">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-8 max-h-full overflow-scroll">
       {projects?.map((project: IProject) => {
         const student: IUser | undefined = students.find(
           (student: IUser) => student.matricNumber === project.studentMatric
