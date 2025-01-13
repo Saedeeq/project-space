@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema, Model } from "mongoose";
+import mongoose, { Schema,  } from "mongoose";
 import { IProject, IUser } from "./interface";
 
 const projectSchema = new Schema<IProject>({

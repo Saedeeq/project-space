@@ -3,7 +3,6 @@ import Link from "next/link";
 import React, { useState } from "react";
 
 const Links = () => {
-  const [addproject, setAddProject] = useState(false);
   const links = [
     { title: "Projects", path: "/dashboard/projects" },
     { title: "Profile", path: "/dashboard/profile" },

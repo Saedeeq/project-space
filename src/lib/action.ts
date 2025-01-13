@@ -1,9 +1,10 @@
 "use server";
 
+import { IProject } from "./interface";
 import { Project } from "./models";
 import { connectToDb } from "./utils";
 
-export const addProjects = async (data: any) => {
+export const addProjects = async (data: IProject) => {
   // const title = formData.get("title") as string;
   // const description = formData.get("description") as string;
   // const studentMatric = formData.get("studentMatric") as string;

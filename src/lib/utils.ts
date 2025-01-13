@@ -1,6 +1,10 @@
 import mongoose, { ConnectOptions } from "mongoose";
 
-const connection: any = {};
+interface Connection {
+  isConnected?: number;
+}
+
+const connection: Connection = {};
 
 export const connectToDb = async () => {
   try {
