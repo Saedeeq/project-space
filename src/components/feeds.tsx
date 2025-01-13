@@ -172,7 +172,7 @@ interface FeedsProps {
 }
 const Feeds: React.FC<FeedsProps> = ({ projects, students }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-8 h-96 overflow-auto">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-8 max-h-full overflow-auto">
       {projects?.map((project: IProject) => {
         const student: IUser | undefined = students.find(
           (student: IUser) => student.matricNumber === project.studentMatric
@@ -180,7 +180,7 @@ const Feeds: React.FC<FeedsProps> = ({ projects, students }) => {
         return (
           <Link
             key={project.studentMatric}
-            href={`/project/${project.studentMatric}`}>
+            href={`/dashboard/projects/${project.studentMatric}`}>
             <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer h-80 flex flex-col justify-between overflow-hidden">
               <div>
                 <h2 className="text-2xl font-semibold mb-3 text-blue-600">
@@ -213,11 +213,12 @@ const Feeds: React.FC<FeedsProps> = ({ projects, students }) => {
                       <p className="text-gray-600">
                         Date:{" "}
                         <span className="font-medium">
-                          {new Date(project?.date).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })}
+                          {project.date &&
+                            new Date(project.date).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })}
                         </span>
                       </p>
                     </div>

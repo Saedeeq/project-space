@@ -11,7 +11,7 @@ const Login = () => {
     e.preventDefault();
     console.log("Matric Number:", matricNumber);
     console.log("Password:", password);
-    router.push("/project");
+    router.push("/dashboard/projects");
   };
 
   return (

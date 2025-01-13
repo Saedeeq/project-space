@@ -1,4 +1,4 @@
-export interface IProject extends Document {
+export interface IProject {
   studentMatric: string;
   title: string;
   description: string;
@@ -6,7 +6,7 @@ export interface IProject extends Document {
   date?: Date;
 }
 
-export interface IUser extends Document {
+export interface IUser {
   name: string;
   lastName: string;
   matricNumber: string;
