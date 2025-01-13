@@ -5,6 +5,8 @@ const projectSchema = new Schema<IProject>({
   studentMatric: { type: String, required: true },
   title: { type: String, required: true },
   description: { type: String, required: true },
+  documentation: { type: String, required: true },
+  votes: { type: Number },
   link: { type: String, required: false },
   date: { type: Date, required: false, default: Date.now },
 });
