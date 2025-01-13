@@ -1,7 +1,7 @@
 "use client";
 import { addProjects } from "@/lib/action";
-import { useRouter } from "next/navigation";
 import React from "react";
+import { useRouter } from "next/navigation";
 
 const AddProjectPage = () => {
   const router = useRouter();
@@ -12,39 +12,91 @@ const AddProjectPage = () => {
     const data = {
       title: formData.get("title") as string,
       description: formData.get("description") as string,
-      link: formData.get("url") as string,
+      link: formData.get("link") as string,
+      documentation: formData.get("documentation") as string,
       studentMatric: formData.get("studentMatric") as string,
     };
     console.log("Form data:", data);
-    const result = await addProjects(formData);
+    const result = await addProjects(data);
     console.log("Result:", result);
 
     // Redirect to the project page
     router.push(`/dashboard/projects/${data.studentMatric}`);
   };
-  return (
-    <div className="max-h-screen max-w-screen ">
-      {" "}
-      <h1 className="text-3xl font-semibold text-center">Add Project</h1>
-      <form
-        onSubmit={handleSubmit}
-        method="post"
-        className="h-1/2 w-1/2 m-auto p-4">
-        <div className="flex flex-col">
-          <input type="text" name="title" placeholder="project title" />
-          <input type="text" name="studentMatric" placeholder="matric number" />
 
-          <input type="text" name="url" placeholder="project url" />
-          <textarea
-            placeholder="project description"
-            name="description"></textarea>
-        </div>
-        <button
-          type="submit"
-          className="p-2 bg-blue-600 shadow-sm text-white rounded-2xl ">
-          submit
-        </button>
-      </form>
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg overflow-auto">
+        <h1 className="text-3xl font-bold text-slate-600 mb-6 text-center">
+          Add Project
+        </h1>
+        <form onSubmit={handleSubmit} method="post" className="space-y-4">
+          <div>
+            <label htmlFor="title" className="block text-gray-700">
+              Title
+            </label>
+            <input
+              type="text"
+              name="title"
+              id="title"
+              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="description" className="block text-gray-700">
+              Description
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="link" className="block text-gray-700">
+              Link
+            </label>
+            <input
+              type="url"
+              name="link"
+              id="link"
+              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="documentation" className="block text-gray-700">
+              Documentation
+            </label>
+            <input
+              type="text"
+              name="documentation"
+              id="documentation"
+              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="studentMatric" className="block text-gray-700">
+              Student Matric
+            </label>
+            <input
+              type="text"
+              name="studentMatric"
+              id="studentMatric"
+              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition-colors duration-300">
+            Add Project
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
