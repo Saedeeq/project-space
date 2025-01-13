@@ -170,7 +170,7 @@ interface FeedsProps {
   projects: IProject[];
   students: IUser[];
 }
-const Feeds: React.FC<FeedsProps> = ({ projects, students }) => {
+const Feeds: React.FC<FeedsProps> = ({ projects:, students }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-8 max-h-full overflow-auto">
       {projects?.map((project: IProject) => {
