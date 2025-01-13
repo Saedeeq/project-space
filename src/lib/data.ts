@@ -1,9 +1,11 @@
 "use server";
 
+import { unstable_noStore } from "next/cache";
 import { Project, User } from "./models";
 import { connectToDb } from "./utils";
 
 export const getProjects = async () => {
+  unstable_noStore();
   try {
     connectToDb();
     const projects = await Project.find();
