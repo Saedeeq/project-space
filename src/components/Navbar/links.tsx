@@ -4,7 +4,7 @@ import Link from "next/link";
 const Links = () => {
   const links = [
     { title: "Projects", path: "/dashboard/projects" },
-    { title: "Profile", path: "/dashboard/profile" },
+
     { title: "Add Project", path: "/dashboard/addproject" },
   ];
   return (

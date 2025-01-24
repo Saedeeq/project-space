@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { loginUser } from "@/lib/data";
-// Update the import path
 
 const Login = () => {
   const [matricNumber, setMatricNumber] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -19,27 +19,30 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const user = await loginUser(matricNumber, password);
       console.log("Login successful:", user);
-
-      // Save matric number to local storage
       localStorage.setItem("matricNumber", matricNumber);
-
       router.push("/dashboard/projects");
     } catch (error) {
       console.error("Login failed:", error);
-      alert("Invalid matric number or password.");
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4">
-      <div className="p-8 rounded-lg shadow-lg w-full max-w-md">
+    <div
+      className="flex items-center justify-center min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: "url('/path/to/your/image.jpg')" }}>
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h1 className="text-4xl font-bold text-slate-600 mb-6 text-center">
-          Login To Your Project Space
+          Welcome to Project Space
         </h1>
+        <h2 className="text-3xl font-bold text-slate-600 mb-6 text-center">
+          Login
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="matricNumber" className="block text-gray-700">
@@ -47,6 +50,7 @@ const Login = () => {
             </label>
             <input
               type="text"
+              name="matricNumber"
               id="matricNumber"
               value={matricNumber}
               onChange={(e) => setMatricNumber(e.target.value)}
@@ -60,6 +64,7 @@ const Login = () => {
             </label>
             <input
               type="password"
+              name="password"
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -69,8 +74,11 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition-colors duration-300">
-            Login
+            className={`w-full p-2 rounded-lg transition-colors duration-300 ${
+              loading ? "bg-gray-500" : "bg-blue-500 hover:bg-blue-600"
+            } text-white`}
+            disabled={loading}>
+            {loading ? "Loading..." : "Login"}
           </button>
         </form>
       </div>
