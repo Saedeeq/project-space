@@ -3,13 +3,12 @@ import { addProjects } from "@/lib/action";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSingleUser } from "@/lib/data";
-
+import { IUser } from "@/lib/interface";
 
 const AddProjectPage = () => {
   const router = useRouter();
-  // @ts-ignore
 
-  const [student, setStudent] = useState<any | null>(null);
+  const [student, setStudent] = useState<IUser | null>(null);
 
   useEffect(() => {
     const fetchStudent = async () => {

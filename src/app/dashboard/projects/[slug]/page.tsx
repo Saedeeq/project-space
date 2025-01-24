@@ -48,11 +48,11 @@ const SingleProjectPage = async ({ params }: { params: { slug: string } }) => {
             <>
               <p className="text-gray-600">
                 <span className="font-medium">Student Name:</span>{" "}
-                {student.name}
+                {student?.name}
               </p>
               <p className="text-gray-600">
                 <span className="font-medium">Department:</span>{" "}
-                {student.department}
+                {student?.department}
               </p>
             </>
           )}
