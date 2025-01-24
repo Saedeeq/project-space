@@ -27,10 +27,30 @@ export const getUsers = async () => {
   }
 };
 
+export const loginUser = async (matricNumber: string, password: string) => {
+  try {
+    // Connect to the database
+    await connectToDb();
+
+    // Find a user with the matching matricNumber and password
+    const user = await User.findOne({ matricNumber, password }).lean();
+
+    if (!user) {
+      throw new Error("Invalid matric number or password");
+    }
+
+    // If the user is found, return the user data (excluding sensitive info, if needed)
+    return user;
+  } catch (error) {
+    console.error("Error logging in user:", error);
+    throw new Error("Unable to log in user");
+  }
+};
+
 export const getSingleUser = async (matricNumber: string) => {
   try {
     connectToDb();
-    const users = await User.findOne({ matricNumber });
+    const users = await User.findOne({ matricNumber }).lean();
     return users;
   } catch (error) {
     console.error("Error fetching users:", error);

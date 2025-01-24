@@ -12,5 +12,6 @@ export interface IUser {
   name: string;
   lastName: string;
   matricNumber: string;
+  password: string;
   department: string;
 }

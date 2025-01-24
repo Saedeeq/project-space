@@ -1,4 +1,4 @@
-import mongoose, { Schema,  } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { IProject, IUser } from "./interface";
 
 const projectSchema = new Schema<IProject>({
@@ -15,6 +15,7 @@ const userSchema = new Schema<IUser>({
   name: { type: String, required: true },
   lastName: { type: String, required: true },
   matricNumber: { type: String, required: true },
+  password: { type: String, required: true },
   department: { type: String, required: true },
 });
 

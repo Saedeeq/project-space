@@ -1,22 +1,42 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { loginUser } from "@/lib/data";
+// Update the import path
 
 const Login = () => {
   const [matricNumber, setMatricNumber] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    // Check if the user is already logged in
+    const storedMatricNumber = localStorage.getItem("matricNumber");
+    if (storedMatricNumber) {
+      router.push("/dashboard/projects"); // Redirect if logged in
+    }
+  }, [router]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Matric Number:", matricNumber);
-    console.log("Password:", password);
-    router.push("/dashboard/projects");
+
+    try {
+      const user = await loginUser(matricNumber, password);
+      console.log("Login successful:", user);
+
+      // Save matric number to local storage
+      localStorage.setItem("matricNumber", matricNumber);
+
+      router.push("/dashboard/projects");
+    } catch (error) {
+      console.error("Login failed:", error);
+      alert("Invalid matric number or password.");
+    }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
-      <div className=" p-8 rounded-lg shadow-lg w-full max-w-md">
+      <div className="p-8 rounded-lg shadow-lg w-full max-w-md">
         <h1 className="text-4xl font-bold text-slate-600 mb-6 text-center">
           Login To Your Project Space
         </h1>

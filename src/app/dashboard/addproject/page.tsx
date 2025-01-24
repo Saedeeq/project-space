@@ -1,11 +1,23 @@
 "use client";
 import { addProjects } from "@/lib/action";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { getSingleUser, getUsers } from "@/lib/data";
 
 const AddProjectPage = () => {
   const router = useRouter();
+  const [student, setStudent] = useState<any>(null);
 
+  useEffect(() => {
+    const fetchStudent = async () => {
+      const matricNumber = localStorage.getItem("matricNumber");
+      if (matricNumber) {
+        const studentData = await getSingleUser(matricNumber);
+        setStudent(studentData);
+      }
+    };
+    fetchStudent();
+  }, []);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -86,6 +98,7 @@ const AddProjectPage = () => {
               type="text"
               name="studentMatric"
               id="studentMatric"
+              value={student?.matricNumber}
               className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
