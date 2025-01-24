@@ -1,7 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Links from "./Links"; // Assuming Links is another component
+import Links from "./links";
+// Assuming Links is another component
 
 const Navbar = () => {
   const [matricNumber, setMatricNumber] = useState<string | null>(null);
