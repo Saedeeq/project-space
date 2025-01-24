@@ -1,24 +1,16 @@
-"use client";
 import Navbar from "@/components/Navbar/Navbar";
-import React, { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import React from "react";
+import LoginCheck from "./loginCheck";
 
 const layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const router = useRouter();
-  useEffect(() => {
-    // Check if the user is already logged in
-    const storedMatricNumber = localStorage.getItem("matricNumber");
-    if (!storedMatricNumber) {
-      router.push("/"); // Redirect if not logged in
-    }
-  }, []);
-
   return (
-    <div className="min-h-screen bg-gray-100">
-      <Navbar />
+    <LoginCheck>
+      <div className="min-h-screen bg-gray-100">
+        <Navbar />
 
-      <main className="p-4">{children}</main>
-    </div>
+        <main className="p-4">{children}</main>
+      </div>
+    </LoginCheck>
   );
 };
 

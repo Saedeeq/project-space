@@ -2,7 +2,7 @@
 import { addProjects } from "@/lib/action";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getSingleUser, getUsers } from "@/lib/data";
+import { getSingleUser } from "@/lib/data";
 
 const AddProjectPage = () => {
   const router = useRouter();
