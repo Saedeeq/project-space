@@ -3,6 +3,7 @@
 import { unstable_noStore } from "next/cache";
 import { Project, User } from "./models";
 import { connectToDb } from "./utils";
+import { IUser } from "./interface";
 
 export const getProjects = async () => {
   unstable_noStore();
@@ -47,14 +48,14 @@ export const loginUser = async (matricNumber: string, password: string) => {
   }
 };
 
-export const getSingleUser = async (matricNumber: string) => {
+export const getSingleUser = async (matricNumber: string): Promise<IUser | null> => {
   try {
-    connectToDb();
-    const users = await User.findOne({ matricNumber }).lean();
-    return users;
+    await connectToDb();
+    const user = await User.findOne({ matricNumber }).lean();
+    return user as IUser | null;
   } catch (error) {
-    console.error("Error fetching users:", error);
-    throw new Error("unable to fetch users");
+    console.error("Error fetching user:", error);
+    throw new Error("Unable to fetch user");
   }
 };
 
