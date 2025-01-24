@@ -4,9 +4,10 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSingleUser } from "@/lib/data";
 
+
 const AddProjectPage = () => {
   const router = useRouter();
-  const [student, setStudent] = useState<any>(null);
+  const [student, setStudent] = useState<any | null>(null);
 
   useEffect(() => {
     const fetchStudent = async () => {
@@ -18,6 +19,7 @@ const AddProjectPage = () => {
     };
     fetchStudent();
   }, []);
+  console.log("Student:", student);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
