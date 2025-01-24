@@ -7,6 +7,8 @@ import { getSingleUser } from "@/lib/data";
 
 const AddProjectPage = () => {
   const router = useRouter();
+  // @ts-ignore
+
   const [student, setStudent] = useState<any | null>(null);
 
   useEffect(() => {
