@@ -116,6 +116,14 @@ const Login = () => {
             {loading ? "Loading..." : "Login"}
           </button>
         </form>
+        <div className="mt-6 text-center">
+          <p className="text-gray-600">
+            Don&apos;t have an account?{" "}
+            <a href="/register" className="text-blue-500 hover:underline">
+              Register here
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );
