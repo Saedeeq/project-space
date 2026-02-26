@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [ ] **Track: Implement core project management features with complete CRUD operations and voting system**
+- [~] **Track: Implement core project management features with complete CRUD operations and voting system**
   *Link: [./tracks/core-pm_20260226/](./tracks/core-pm_20260226/)*
