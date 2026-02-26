@@ -29,7 +29,7 @@ export const getUsers = async () => {
   }
 };
 
-export const loginUser = async (matricNumber: string, password: string) => {
+export const loginUser = async (matricNumber: string, userPassword: string) => {
   try {
     // Connect to the database
     await connectToDb();
@@ -42,15 +42,16 @@ export const loginUser = async (matricNumber: string, password: string) => {
     }
 
     // Verify the password using bcrypt
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const isPasswordValid = await bcrypt.compare(userPassword, (user as any).password);
 
     if (!isPasswordValid) {
       throw new Error("Invalid matric number or password");
     }
 
     // Return user data without sensitive information
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _userPassword, ...userWithoutPassword } = user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+    const { password, ...userWithoutPassword } = user as any;
     return userWithoutPassword;
   } catch (error) {
     console.error("Error logging in user:", error);

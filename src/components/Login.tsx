@@ -42,7 +42,8 @@ const Login = () => {
       console.log("Login successful:", user);
 
       // Create session token
-      const session = createSession(user._id, user.matricNumber);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const session = createSession((user as any)._id, (user as any).matricNumber);
 
       // Store session data in localStorage
       localStorage.setItem("matricNumber", matricNumber);
