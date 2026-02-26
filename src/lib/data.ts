@@ -4,6 +4,7 @@ import { unstable_noStore } from "next/cache";
 import { Project, User } from "./models";
 import { connectToDb } from "./utils";
 import { IUser } from "./interface";
+import bcrypt from "bcryptjs";
 
 export const getProjects = async () => {
   unstable_noStore();
@@ -33,18 +34,64 @@ export const loginUser = async (matricNumber: string, password: string) => {
     // Connect to the database
     await connectToDb();
 
-    // Find a user with the matching matricNumber and password
-    const user = await User.findOne({ matricNumber, password }).lean();
+    // Find a user with the matching matricNumber
+    const user = await User.findOne({ matricNumber }).lean();
 
     if (!user) {
       throw new Error("Invalid matric number or password");
     }
 
-    // If the user is found, return the user data (excluding sensitive info, if needed)
-    return user;
+    // Verify the password using bcrypt
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      throw new Error("Invalid matric number or password");
+    }
+
+    // Return user data without sensitive information
+    const { password: _, ...userWithoutPassword } = user;
+    return userWithoutPassword;
   } catch (error) {
     console.error("Error logging in user:", error);
     throw new Error("Unable to log in user");
+  }
+};
+
+export const registerUser = async (userData: {
+  name: string;
+  lastName: string;
+  matricNumber: string;
+  password: string;
+  department: string;
+}) => {
+  try {
+    await connectToDb();
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ matricNumber: userData.matricNumber });
+    if (existingUser) {
+      throw new Error("User with this matric number already exists");
+    }
+
+    // Hash the password
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
+
+    // Create new user with hashed password
+    const newUser = new User({
+      ...userData,
+      password: hashedPassword,
+    });
+
+    await newUser.save();
+
+    // Return user data without password
+    const userObject = newUser.toObject();
+    const { password: _, ...userWithoutPassword } = userObject;
+    return userWithoutPassword;
+  } catch (error) {
+    console.error("Error registering user:", error);
+    throw new Error("Unable to register user");
   }
 };
 
