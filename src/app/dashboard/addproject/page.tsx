@@ -1,6 +1,6 @@
 "use client";
 import { addProjects } from "@/lib/action";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { getSingleUser } from "@/lib/data";
 import { IUser } from "@/lib/interface";
@@ -11,6 +11,7 @@ interface FormErrors {
   link?: string;
   documentation?: string;
   studentMatric?: string;
+  pdfDocument?: string;
 }
 
 interface Notification {
@@ -20,11 +21,15 @@ interface Notification {
 
 const AddProjectPage = () => {
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [student, setStudent] = useState<IUser | null>(null);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [notification, setNotification] = useState<Notification | null>(null);
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
+  const [pdfUploadProgress, setPdfUploadProgress] = useState<number>(0);
+  const [pdfPreview, setPdfPreview] = useState<string>("");
 
   useEffect(() => {
     const fetchStudent = async () => {
@@ -90,7 +95,7 @@ const AddProjectPage = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       setNotification({ type: "error", message: "Please fix the form errors" });
       return;
@@ -99,30 +104,57 @@ const AddProjectPage = () => {
     setLoading(true);
     setNotification(null);
 
-    const formData = new FormData(e.currentTarget);
-    const data = {
-      title: formData.get("title") as string,
-      description: formData.get("description") as string,
-      link: formData.get("link") as string,
-      documentation: formData.get("documentation") as string,
-      studentMatric: formData.get("studentMatric") as string,
-    };
-
     try {
+      let pdfUrl = "";
+      let pdfFileName = "";
+
+      // Upload PDF if selected
+      if (pdfFile) {
+        setPdfUploadProgress(0);
+        const uploadFormData = new FormData();
+        uploadFormData.append("file", pdfFile);
+
+        const uploadResponse = await fetch("/api/upload", {
+          method: "POST",
+          body: uploadFormData,
+        });
+
+        if (!uploadResponse.ok) {
+          const errorData = await uploadResponse.json();
+          throw new Error(errorData.error || "Failed to upload PDF");
+        }
+
+        const uploadResult = await uploadResponse.json();
+        pdfUrl = uploadResult.url;
+        pdfFileName = uploadResult.fileName;
+      }
+
+      const formData = new FormData(e.currentTarget);
+      const data = {
+        title: formData.get("title") as string,
+        description: formData.get("description") as string,
+        link: formData.get("link") as string,
+        documentation: formData.get("documentation") as string,
+        studentMatric: formData.get("studentMatric") as string,
+        pdfDocument: pdfUrl,
+        pdfFileName: pdfFileName,
+      };
+
       await addProjects(data);
       setNotification({ type: "success", message: "Project added successfully!" });
-      
+
       // Redirect after short delay
       setTimeout(() => {
         router.push(`/dashboard/projects/${data.studentMatric}`);
       }, 1000);
     } catch (error) {
-      setNotification({ 
-        type: "error", 
-        message: error instanceof Error ? error.message : "Failed to add project" 
+      setNotification({
+        type: "error",
+        message: error instanceof Error ? error.message : "Failed to add project",
       });
     } finally {
       setLoading(false);
+      setPdfUploadProgress(0);
     }
   };
 
@@ -215,14 +247,139 @@ const AddProjectPage = () => {
               id="documentation"
               placeholder="Project documentation or README link"
               className={`w-full p-2 border rounded-lg focus:outline-none focus:ring-2 ${
-                errors.documentation 
-                  ? "border-red-500 focus:ring-red-500" 
+                errors.documentation
+                  ? "border-red-500 focus:ring-red-500"
                   : "border-gray-300 focus:ring-blue-500"
               }`}
               required
             />
             {errors.documentation && (
               <p className="mt-1 text-sm text-red-600">{errors.documentation}</p>
+            )}
+          </div>
+
+          {/* PDF Upload Field */}
+          <div>
+            <label htmlFor="pdfDocument" className="block text-gray-700 mb-2">
+              Project PDF Document (Optional)
+            </label>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition-colors duration-200">
+              <input
+                type="file"
+                name="pdfDocument"
+                id="pdfDocument"
+                ref={fileInputRef}
+                accept="application/pdf"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    if (file.type !== "application/pdf") {
+                      setErrors({
+                        ...errors,
+                        pdfDocument: "Only PDF files are allowed",
+                      });
+                      setPdfFile(null);
+                      setPdfPreview("");
+                    } else if (file.size > 10 * 1024 * 1024) {
+                      setErrors({
+                        ...errors,
+                        pdfDocument: "File size must be less than 10MB",
+                      });
+                      setPdfFile(null);
+                      setPdfPreview("");
+                    } else {
+                      setErrors({ ...errors, pdfDocument: undefined });
+                      setPdfFile(file);
+                      setPdfPreview(file.name);
+                    }
+                  }
+                }}
+                className="hidden"
+              />
+              {!pdfPreview ? (
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  className="cursor-pointer"
+                >
+                  <svg
+                    className="mx-auto h-12 w-12 text-gray-400"
+                    stroke="currentColor"
+                    fill="none"
+                    viewBox="0 0 48 48"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <p className="mt-2 text-sm text-gray-600">
+                    <span className="font-medium text-blue-600 hover:text-blue-500">
+                      Click to upload
+                    </span>{" "}
+                    or drag and drop
+                  </p>
+                  <p className="mt-1 text-xs text-gray-500">PDF up to 10MB</p>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <svg
+                      className="h-10 w-10 text-red-500"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">
+                        {pdfPreview}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {pdfFile ? (pdfFile.size / 1024 / 1024).toFixed(2) : 0} MB
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPdfFile(null);
+                      setPdfPreview("");
+                      if (fileInputRef.current) {
+                        fileInputRef.current.value = "";
+                      }
+                    }}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fillRule="evenodd"
+                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              )}
+            </div>
+            {pdfUploadProgress > 0 && (
+              <div className="mt-2">
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${pdfUploadProgress}%` }}
+                  />
+                </div>
+              </div>
+            )}
+            {errors.pdfDocument && (
+              <p className="mt-1 text-sm text-red-600">{errors.pdfDocument}</p>
             )}
           </div>
 

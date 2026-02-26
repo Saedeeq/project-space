@@ -6,6 +6,8 @@ export interface IProject {
   date?: Date;
   votes?: number;
   documentation?: string;
+  pdfDocument?: string; // URL or path to PDF document
+  pdfFileName?: string; // Original filename
 }
 
 export interface IUser {

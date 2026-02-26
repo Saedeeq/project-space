@@ -58,6 +58,16 @@ const projectSchema = new Schema<IProjectDocument>(
       required: false,
       default: Date.now,
     },
+    pdfDocument: {
+      type: String,
+      required: false,
+      trim: true,
+    },
+    pdfFileName: {
+      type: String,
+      required: false,
+      trim: true,
+    },
   },
   {
     timestamps: true,

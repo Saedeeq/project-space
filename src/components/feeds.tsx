@@ -83,6 +83,14 @@ const Feeds: React.FC<FeedsProps> = ({ projects, students }) => {
                     <p className="text-gray-800 mb-4 line-clamp-3">
                       {project.description}
                     </p>
+                    {project.pdfDocument && (
+                      <div className="flex items-center space-x-2 text-sm text-blue-600">
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
+                        </svg>
+                        <span>Has PDF Document</span>
+                      </div>
+                    )}
                   </div>
                   {student && (
                     <div className="bg-gray-100 p-4 rounded-lg mt-4">

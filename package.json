@@ -15,6 +15,7 @@
     "@heroicons/react": "^2.2.0",
     "bcryptjs": "^3.0.3",
     "mongoose": "^8.9.3",
+    "multer": "^2.0.2",
     "next": "14.2.13",
     "react": "^18",
     "react-dom": "^18"
@@ -25,6 +26,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/jest": "^30.0.0",
+    "@types/multer": "^2.0.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
