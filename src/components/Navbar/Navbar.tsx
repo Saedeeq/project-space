@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Links from "./links";
-// Assuming Links is another component
 
 const Navbar = () => {
   const [matricNumber, setMatricNumber] = useState<string | null>(null);
@@ -18,11 +17,14 @@ const Navbar = () => {
 
   const handleLogout = () => {
     setLoading(true);
+    // Clear all session data
     localStorage.removeItem("matricNumber");
+    localStorage.removeItem("sessionToken");
+    localStorage.removeItem("sessionExpiry");
     setTimeout(() => {
       router.push("/");
       setLoading(false);
-    }, 1000); // Simulate a delay for the loading state
+    }, 500);
   };
 
   return (
