@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { loginUser } from "@/lib/data";
-import { createSession, getSessionExpiryDate } from "@/lib/session";
+import { createSession } from "@/lib/session";
 
 const Login = () => {
   const [matricNumber, setMatricNumber] = useState("");

@@ -1,7 +1,6 @@
 /**
  * @jest-environment node
  */
-import mongoose from 'mongoose';
 import { User, Project } from '../models';
 
 describe('User Model Schema Validation', () => {

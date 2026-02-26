@@ -49,7 +49,8 @@ export const loginUser = async (matricNumber: string, password: string) => {
     }
 
     // Return user data without sensitive information
-    const { password: _, ...userWithoutPassword } = user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _userPassword, ...userWithoutPassword } = user;
     return userWithoutPassword;
   } catch (error) {
     console.error("Error logging in user:", error);
@@ -87,7 +88,8 @@ export const registerUser = async (userData: {
 
     // Return user data without password
     const userObject = newUser.toObject();
-    const { password: _, ...userWithoutPassword } = userObject;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _userPassword, ...userWithoutPassword } = userObject;
     return userWithoutPassword;
   } catch (error) {
     console.error("Error registering user:", error);
