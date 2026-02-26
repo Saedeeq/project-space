@@ -23,6 +23,13 @@ module.exports = {
     },
   },
   transform: {
-    '^.+\\.tsx?$': 'ts-jest',
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        tsconfig: {
+          jsx: 'react',
+        },
+      },
+    ],
   },
 };
