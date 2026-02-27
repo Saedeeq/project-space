@@ -35,23 +35,25 @@ export const loginUser = async (matricNumber: string, userPassword: string) => {
     await connectToDb();
 
     // Find a user with the matching matricNumber
-    const user = await User.findOne({ matricNumber }).lean();
+    const user = await User.findOne({ matricNumber });
 
     if (!user) {
+      console.error('User not found:', matricNumber);
       throw new Error("Invalid matric number or password");
     }
 
     // Verify the password using bcrypt
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const isPasswordValid = await bcrypt.compare(userPassword, (user as any).password);
+    const isPasswordValid = await bcrypt.compare(userPassword, user.password);
 
     if (!isPasswordValid) {
+      console.error('Invalid password for user:', matricNumber);
       throw new Error("Invalid matric number or password");
     }
 
     // Return user data without sensitive information
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
-    const { password, ...userWithoutPassword } = user as any;
+    const { password, ...userWithoutPassword } = user.toObject();
     return userWithoutPassword;
   } catch (error) {
     console.error("Error logging in user:", error);

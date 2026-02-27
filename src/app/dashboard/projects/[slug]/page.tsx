@@ -54,8 +54,9 @@ const SingleProjectPage = async ({ params }: { params: { slug: string } }) => {
                 </div>
               </div>
               <a
-                href={`/api/download?file=${encodeURIComponent(project.pdfDocument.replace("/uploads/", ""))}`}
-                download={project.pdfFileName}
+                href={project.pdfDocument.startsWith('http') ? project.pdfDocument : `/api/download?url=${encodeURIComponent(project.pdfDocument)}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">

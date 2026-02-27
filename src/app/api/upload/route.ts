@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
-import { existsSync } from 'fs';
+import { put } from '@vercel/blob';
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,34 +21,34 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'File size must be less than 10MB' }, { status: 400 });
     }
 
-    // Create uploads directory if it doesn't exist
-    const uploadsDir = join(process.cwd(), 'public', 'uploads');
-    if (!existsSync(uploadsDir)) {
-      await mkdir(uploadsDir, { recursive: true });
-    }
-
     // Generate unique filename
     const timestamp = Date.now();
     const randomString = Math.random().toString(36).substring(2, 15);
-    const fileName = `${timestamp}_${randomString}_${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
-    const filePath = join(uploadsDir, fileName);
+    const fileName = `projects/${timestamp}_${randomString}_${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
 
-    // Save file
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    await writeFile(filePath, buffer);
-
-    // Return the public URL
-    const publicUrl = `/uploads/${fileName}`;
+    // Upload to Vercel Blob
+    const blob = await put(fileName, file, {
+      access: 'public',
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    });
 
     return NextResponse.json({
       success: true,
-      url: publicUrl,
+      url: blob.url,
       fileName: file.name,
       size: file.size,
     });
   } catch (error) {
     console.error('Error uploading file:', error);
+    
+    // Check if it's a Vercel Blob configuration error
+    if (error instanceof Error && error.message.includes('token')) {
+      return NextResponse.json({ 
+        error: 'Vercel Blob not configured. Please set BLOB_READ_WRITE_TOKEN environment variable.',
+        needsSetup: true 
+      }, { status: 501 });
+    }
+    
     return NextResponse.json({ error: 'Failed to upload file' }, { status: 500 });
   }
 }
