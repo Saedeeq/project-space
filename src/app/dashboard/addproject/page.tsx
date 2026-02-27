@@ -104,6 +104,16 @@ const AddProjectPage = () => {
     setLoading(true);
     setNotification(null);
 
+    // Get form data BEFORE async operation
+    const form = e.currentTarget;
+    const formElements = form.elements as HTMLFormElement["elements"] & {
+      title: HTMLInputElement;
+      description: HTMLTextAreaElement;
+      link: HTMLInputElement;
+      documentation: HTMLInputElement;
+      studentMatric: HTMLInputElement;
+    };
+
     try {
       let pdfUrl = "";
       let pdfFileName = "";
@@ -129,13 +139,12 @@ const AddProjectPage = () => {
         pdfFileName = uploadResult.fileName;
       }
 
-      const formData = new FormData(e.currentTarget);
       const data = {
-        title: formData.get("title") as string,
-        description: formData.get("description") as string,
-        link: formData.get("link") as string,
-        documentation: formData.get("documentation") as string,
-        studentMatric: formData.get("studentMatric") as string,
+        title: formElements.title.value,
+        description: formElements.description.value,
+        link: formElements.link.value,
+        documentation: formElements.documentation.value,
+        studentMatric: formElements.studentMatric.value,
         pdfDocument: pdfUrl,
         pdfFileName: pdfFileName,
       };
